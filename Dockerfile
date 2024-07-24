@@ -1,27 +1,17 @@
-# Dockerfile
 FROM python:3.9-slim
 
-# Set the working directory
 WORKDIR /app
 
-# Copy the requirements file
 COPY requirements.txt .
 
-# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application code
 COPY . .
 
-# Ensure the SQLite database file exists
+# Crear el directorio instance
+RUN mkdir -p /app/instance
+
+# Crear el archivo app.db
 RUN touch /app/instance/app.db
 
-# Set environment variables for Flask
-ENV FLASK_APP=app.py
-ENV FLASK_ENV=development
-
-# Expose the port
-EXPOSE 5000
-
-# Run the application
-CMD ["flask", "run", "--host=0.0.0.0"]
+CMD ["python", "app.py"]
