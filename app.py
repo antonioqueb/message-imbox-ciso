@@ -1,11 +1,13 @@
-from datetime import datetime
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Boolean
+from flask_cors import CORS
 from functools import wraps
 import pytz
+from datetime import datetime
 
 app = Flask(__name__)
+CORS(app)  # Habilitar CORS para todos los orígenes por defecto
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///messages.db'
 app.config['SECRET_KEY'] = 'supersecretkey'
 db = SQLAlchemy(app)
@@ -24,6 +26,7 @@ class Message(db.Model):
     opened_at = db.Column(db.DateTime, nullable=True)
 
     __table_args__ = (db.UniqueConstraint('name', 'email', 'phone', 'message', name='unique_message_constraint'),)
+
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -55,7 +58,7 @@ def add_message():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
+    if request.method == 'POST']:
         username = request.form['username']
         password = request.form['password']
         if username == 'admin' and password == 'secreto':
