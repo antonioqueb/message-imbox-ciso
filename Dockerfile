@@ -1,24 +1,27 @@
-# Utiliza la imagen oficial de Python como base
+# Dockerfile
 FROM python:3.9-slim
 
-# Establece el directorio de trabajo en el contenedor
+# Set the working directory
 WORKDIR /app
 
-# Copia el archivo de requisitos al directorio de trabajo
-COPY requirements.txt requirements.txt
+# Copy the requirements file
+COPY requirements.txt .
 
-# Instala las dependencias
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copia el contenido de la aplicación al directorio de trabajo
+# Copy the rest of the application code
 COPY . .
 
-# Expone el puerto en el que la aplicación se ejecutará
+# Ensure the SQLite database file exists
+RUN touch /app/instance/app.db
+
+# Set environment variables for Flask
+ENV FLASK_APP=app.py
+ENV FLASK_ENV=development
+
+# Expose the port
 EXPOSE 5000
 
-# Establece la variable de entorno para que Flask escuche en todas las interfaces
-ENV FLASK_APP=app.py
-ENV FLASK_RUN_HOST=0.0.0.0
-
-# Ejecuta el servidor de Flask
-CMD ["flask", "run"]
+# Run the application
+CMD ["flask", "run", "--host=0.0.0.0"]

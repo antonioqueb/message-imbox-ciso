@@ -13,16 +13,7 @@ services:
       - .:/app
     environment:
       FLASK_ENV: development
-    depends_on:
-      - db
-    restart: always 
-
-  db:
-    image: sqlite:latest
-    container_name: message-imbox-ciso-db
-    volumes:
-      - db_data:/var/lib/sqlite
-    restart: always 
+    restart: always
 
 volumes:
   db_data:
