@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensajes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #71b7e6, #9b59b6);
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            box-sizing: border-box;
+            position: relative;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+            padding: 16px;
+        }
+        .title {
+            font-size: 24px;
+            color: #333;
+        }
+        .search-bar {
+            width: 94%;
+            padding: 16px;
+            border-bottom: 1px solid #ddd;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .messages-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+        .messages-list li {
+            border-bottom: 1px solid #ddd;
+            padding: 16px;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s;
+        }
+        .messages-list li:hover {
+            background-color: #f1f1f1;
+        }
+        .messages-list li a {
+            text-decoration: none;
+            color: #007BFF;
+            display: block;
+        }
+        .messages-list li a:hover {
+            color: #0056b3;
+        }
+        .unread {
+            color: #d9534f;
+            font-weight: bold;
+        }
+        .message-date {
+            color: #888;
+            font-size: 12px;
+        }
+        .logout-link {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 12px;
+            background-color: #ffffff;
+            color: #007BFF;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .logout-link:hover {
+            background-color: #f5f5f5;
+            color: #007BFF;
+        }
+    </style>
+    <script>
+        function filterMessages() {
+            var input, filter, ul, li, a, i, txtValue;
+            input = document.getElementById('searchInput');
+            filter = input.value.toUpperCase();
+            ul = document.getElementById('messagesList');
+            li = ul.getElementsByTagName('li');
+            for (i = 0; i < li.length; i++) {
+                a = li[i].getElementsByTagName('a')[0];
+                txtValue = a.textContent || a.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    li[i].style.display = "";
+                } else {
+                    li[i].style.display = "none";
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Mensajes</h1>
+            <a href="{{ url_for('logout') }}" class="logout-link">Cerrar sesión</a>
+        </div>
+        <div class="search-bar">
+            <input type="text" id="searchInput" onkeyup="filterMessages()" placeholder="Buscar mensajes por nombre o email...">
+        </div>
+        <ul class="messages-list" id="messagesList">
+            {% for message in messages | sort(attribute='received_at', reverse=True) %}
+                <li>
+                    <a href="{{ url_for('view_message', message_id=message.id) }}">
+                        {{ message.name }} - {{ message.email }} 
+                        {% if not message.read %} <span class="unread">(No leído)</span> {% endif %}
+                        <br>
+                        <span class="message-date">Recibido el: {{ message.received_at.strftime('%d/%m/%Y %H:%M') }}</span>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
