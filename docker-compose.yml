@@ -14,8 +14,7 @@ services:
     environment:
       FLASK_ENV: development
       FLASK_APP: app.py
-    command: >
-      sh -c "flask db init && flask db migrate -m 'Initial migration' && flask db upgrade && flask run --host=0.0.0.0"
+    command: ./entrypoint.sh
     restart: always
 
 volumes:
