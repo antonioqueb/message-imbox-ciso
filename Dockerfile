@@ -23,5 +23,10 @@ ENV FLASK_ENV=development
 # Expose the port
 EXPOSE 5000
 
-# Initialize the database (this will run on container start)
-CMD ["sh", "-c", "flask db upgrade && flask run --host=0.0.0.0"]
+# Initialize the database and apply migrations
+RUN flask db init || echo "Migrations already initialized"
+RUN flask db migrate -m "Initial migration"
+RUN flask db upgrade
+
+# Run the application
+CMD ["flask", "run", "--host=0.0.0.0"]
