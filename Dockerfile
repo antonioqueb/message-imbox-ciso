@@ -1,4 +1,3 @@
-# Dockerfile
 FROM python:3.9-slim
 
 # Set the working directory
@@ -22,6 +21,9 @@ ENV FLASK_ENV=development
 
 # Expose the port
 EXPOSE 5000
+
+# Initialize the database
+RUN flask db init && flask db migrate -m "Initial migration" && flask db upgrade
 
 # Run the application
 CMD ["flask", "run", "--host=0.0.0.0"]
