@@ -10,5 +10,8 @@ else
   echo "Database found. Skipping initialization."
 fi
 
+# Always apply the latest migrations
+flask db upgrade
+
 # Run the application
 flask run --host=0.0.0.0
