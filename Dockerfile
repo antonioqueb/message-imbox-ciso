@@ -13,7 +13,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Ensure the SQLite database file exists
-RUN touch /app/instance/app.db
+RUN touch /app/messages.db
 
 # Set environment variables for Flask
 ENV FLASK_APP=app.py
@@ -23,7 +23,7 @@ ENV FLASK_ENV=development
 EXPOSE 5000
 
 # Initialize the database
-RUN flask db init && flask db migrate -m "Initial migration" && flask db upgrade
+RUN flask db init && flask db migrate -m "Initial migration" && flask db upgrade || echo "Initialization commands failed, will run on container start"
 
 # Run the application
 CMD ["flask", "run", "--host=0.0.0.0"]

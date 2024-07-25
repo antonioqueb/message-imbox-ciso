@@ -1,18 +1,18 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Boolean
+from flask_migrate import Migrate
 from flask_cors import CORS
 from functools import wraps
 import pytz
 from datetime import datetime
 
 app = Flask(__name__)
-CORS(app)  # Habilitar CORS para todos los orígenes por defecto
+CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///messages.db'
 app.config['SECRET_KEY'] = 'supersecretkey'
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
-# Definimos la zona horaria de la Ciudad de México
 cdmx_tz = pytz.timezone('America/Mexico_City')
 
 class Message(db.Model):
@@ -21,7 +21,7 @@ class Message(db.Model):
     email = db.Column(db.String(100), nullable=False)
     phone = db.Column(db.String(15), nullable=True)
     message = db.Column(db.Text, nullable=True)
-    read = db.Column(Boolean, default=False)
+    read = db.Column(db.Boolean, default=False)
     received_at = db.Column(db.DateTime, default=lambda: datetime.now(cdmx_tz))
     opened_at = db.Column(db.DateTime, nullable=True)
 
