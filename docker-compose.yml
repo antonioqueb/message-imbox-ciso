@@ -9,6 +9,7 @@ services:
       - "3027:5000"
     volumes:
       - .:/app
+      - db_data:/app/instance  # Mapeo del volumen para la base de datos
     environment:
       FLASK_ENV: development
       FLASK_APP: app.py
@@ -17,3 +18,4 @@ services:
 
 volumes:
   db_data:
+    driver: local
